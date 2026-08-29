@@ -1,17 +1,15 @@
-package taller1;
+package aed;
 
 class Funciones {
 
-    /***  Primera parte: Funciones en java ***/
+/***  Primera parte: Funciones en java ***/
 
     int cuadrado(int x) {
         return x * x;
     }
 
     double distancia(double x, double y) {
-        /* uso el metodo estatico sqrt() de la clase Math. Ademas, la clase Math ya viene importada
-        por default en el package java.lang */
-        return Math.sqrt(x * x + y * y);
+        return Math.sqrt((x*x) + (y*y));
     }
 
     boolean esPar(int n) {
@@ -19,110 +17,111 @@ class Funciones {
     }
 
     boolean esBisiesto(int n) {
-        return (n % 4 == 0 && n % 100 != 0) || (n % 400 == 0);
+        return (n % 400 == 0) || ((n % 4 == 0) && (n % 100 != 0));
     }
 
     int factorialIterativo(int n) {
-        // variable acumuladora
-        int fact = 1;
+        int res = 1;
 
         for (int i = 1; i <= n; i++) {
-            fact *= i;
+            res *= i;
         }
 
-        return fact;
+        return res;
     }
 
     int factorialRecursivo(int n) {
         if (n == 0) {
             return 1;
         }
-        return n * factorialRecursivo(n-1);
+        else {
+            return n * factorialRecursivo(n-1);
+        }
     }
 
-    // ver explicacion en el cuaderno
-    boolean esPrimo(int n) {
-        // me saco de encima casos triviales
-        if (n < 2) {
-            return false;
+    boolean esPrimo(int n) {        
+        boolean res = true;
+
+        if (n == 0 || n == 1) {
+            res = false;
         }
 
-        int divisor = 2;
-
-        while (n % divisor != 0) {
-            divisor++;
-        }
-
-        // dos posibilidades, o salgo del while con div = n (es primo) o salgo con div < n (no es primo)
-        return divisor == n;
-    }
-
-    int sumatoria(int[] numeros) {
-        // variable acumuladora
-        int sumat = 0;
-
-        for (int numero : numeros) {
-            sumat += numero;
-        }
-
-        return sumat;
-    }
-
-    int busqueda(int[] numeros, int buscado) {
-        int i = 0;
-
-        while (numeros[i] != buscado) {
-            i++;
-        }
-
-        return i;
-    }
-
-    // ver explicacion en el cuaderno
-    boolean tienePrimo(int[] numeros) {
-        int pos = 0;
-
-        while (pos < numeros.length && !esPrimo(numeros[pos])) {
-            pos++;
-        }
-
-        return pos < numeros.length;
-    }
-
-    boolean todosPares(int[] numeros) {
-        for (int numero : numeros) {
-            if (numero % 2 != 0) {
-                return false;
+        for (int i = 2; i < n; i++) {
+            if (n % i == 0) {
+                res = false;
             }
         }
 
-        // si finaliza el for completo entonces no habia impares
-        return true;
+        return res;
+    }
+
+    int sumatoria(int[] numeros) {
+        int res = 0;
+        
+        for (int i = 0; i < numeros.length; i++) {
+            res += numeros[i];
+        }
+
+        return res;
+    }
+
+    int busqueda(int[] numeros, int buscado) {
+        int res = 0;
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (numeros[i] == buscado) {
+                res = i;
+            }
+        }
+
+        return res;
+    }
+
+    boolean tienePrimo(int[] numeros) {
+        boolean res = false;
+
+        for (int numero : numeros) {
+            if (esPrimo(numero)) {
+                res = true;
+            }
+        }
+
+        return res;
+    }
+
+    boolean todosPares(int[] numeros) {
+        boolean res = true;
+
+        for (int numero : numeros) {
+            if (numero % 2 != 0) {
+                res = false;
+            }
+        }
+
+        return res;
     }
 
     boolean esPrefijo(String s1, String s2) {
-        // descarto casos triviales
         if (s1.length() > s2.length()) {
             return false;
         }
+        
+        boolean res = true;
 
-        // ahora estoy seguro de que |s1| <= |s2|
-        int i = 0;
-
-        while (i < s1.length() && s1.charAt(i) == s2.charAt(i)) {
-            i++;
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) {
+                res = false;
+            }
         }
 
-        return i == s1.length();
-
+        return res;
     }
 
-    // funcion auxiliar para esSufijo
-    String invertir(String texto) {
+    String invertirString(String palabra) {
         String res = "";
-
-        for (int i = texto.length()-1; i >= 0; i--) {
-            res += texto.charAt(i);
+        
+        for (int i = palabra.length()-1; i >= 0; i--) {
+            res += palabra.charAt(i);
         }
 
         return res;
@@ -130,10 +129,10 @@ class Funciones {
 
 
     boolean esSufijo(String s1, String s2) {
-        return esPrefijo(invertir(s1), invertir(s2));
+        return esPrefijo(invertirString(s1), invertirString(s2));
     }
 
-    /***  Segunda parte: Debugging ***/
+/***  Segunda parte: Debugging ***/
 
     boolean xor(boolean a, boolean b) {
         return (a || b) && !(a && b);
@@ -151,18 +150,17 @@ class Funciones {
                 res = false;
             }
         }
+
         return res;
     }
 
     boolean ordenado(int[] xs) {
         boolean res = true;
-
         for (int i = 0; i < xs.length-1; i++) {
             if (xs[i] > xs [i+1]) {
                 res = false;
             }
         }
-
         return res;
     }
 
@@ -176,9 +174,8 @@ class Funciones {
 
     boolean todosPositivos(int[] xs) {
         boolean res = true;
-
         for (int x : xs) {
-            if (!(x > 0)) {
+            if (x <= 0) {
                 res = false;
             }
         }
